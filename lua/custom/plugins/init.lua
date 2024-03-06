@@ -3,8 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  'folke/zen-mode.nvim',
   'github/copilot.vim',
   'eandrju/cellular-automaton.nvim',
-  'mbbill/undotree',
 }
