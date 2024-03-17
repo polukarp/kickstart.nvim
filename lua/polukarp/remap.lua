@@ -32,8 +32,13 @@ vim.keymap.set('n', '<leader>k', '<cmd>lnext<CR>zz')
 vim.keymap.set('n', '<leader>j', '<cmd>lprev<CR>zz')
 
 vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true })
 
 vim.keymap.set('n', '<leader>mr', '<cmd>CellularAutomaton make_it_rain<CR>')
 
 vim.api.nvim_set_keymap('n', ';', ':', { noremap = true })
+
+vim.api.nvim_create_user_command('OrganizeImports', function()
+  vim.cmd ':OrganizeImports'
+end, {})
+
+vim.api.nvim_set_keymap('n', '<leader>o', ':OrganizeImports<CR>', { noremap = true, silent = true })
