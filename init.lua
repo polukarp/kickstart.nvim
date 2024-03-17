@@ -383,7 +383,7 @@ require('lazy').setup {
         python = { 'isort', 'black' },
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
-        typescriptreact = { { 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
       },
     },
   },
