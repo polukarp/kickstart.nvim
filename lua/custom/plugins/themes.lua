@@ -4,7 +4,6 @@ return {
   'rose-pine/neovim',
   'folke/tokyonight.nvim',
   'rebelot/kanagawa.nvim',
-  'nyoom-engineering/oxocarbon.nvim/',
   {
     'nmorhetz/gruvbox',
     lazy = false,
@@ -14,5 +13,15 @@ return {
       vim.opt.background = 'dark'
       vim.cmd.hi 'Comment gui=none'
     end,
+  },
+  {
+    'nyoom-engineering/oxocarbon.nvim/',
+    config = function()
+      vim.cmd.colorscheme 'oxocarbon'
+      vim.opt.background = 'light'
+    end,
+  },
+  {
+    'NLKNguyen/papercolor-theme',
   },
 }
