@@ -316,6 +316,8 @@ require('lazy').setup {
             },
           },
         },
+
+        docker_compose_language_service = {},
         eslint_d = {},
         cssls = {},
         lua_ls = {
@@ -354,7 +356,7 @@ require('lazy').setup {
         'css-lsp',
         'eslint_d',
         'bash-language-server',
-        'dockerfile-language-server',
+        'docker-compose-language-service',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -383,7 +385,11 @@ require('lazy').setup {
         python = { 'isort', 'black' },
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
         typescriptreact = { { 'prettierd', 'prettier' } },
+        astro = { { 'astro' } },
+        docker = { { 'dockerfile-language-server' } },
+        dockerfile = { { 'dockerfile-language-server' } },
       },
     },
   },
