@@ -6,4 +6,5 @@ return {
   'github/copilot.vim',
   'eandrju/cellular-automaton.nvim',
   'windwp/nvim-ts-autotag',
+  { 'wakatime/vim-wakatime', lazy = false },
 }
