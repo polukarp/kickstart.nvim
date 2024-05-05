@@ -352,11 +352,13 @@ require('lazy').setup {
         'stylua', -- Used to format lua code
         'dockerfile-language-server',
         'typescript-language-server',
+        'csharp-language-server',
         'prettierd',
         'css-lsp',
         'eslint_d',
         'bash-language-server',
         'docker-compose-language-service',
+        'tailwindcss',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -394,6 +396,8 @@ require('lazy').setup {
         json = { { 'prettierd', 'prettier' } },
         css = { { 'prettierd', 'prettier' } },
         scss = { { 'prettierd', 'prettier' } },
+        toml = { { 'prettierd', 'prettier', 'taplo' } },
+        csharp = { { 'csharpier' } },
         -- tailwindcss = { { 'tailwindcss' } },
       },
     },
