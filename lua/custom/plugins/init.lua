@@ -11,4 +11,5 @@ return {
     end,
   },
   'xiyaowong/transparent.nvim',
+  'nvim-neotest/nvim-nio',
 }
