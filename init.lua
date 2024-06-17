@@ -6,6 +6,8 @@ require 'polukarp'
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.g.netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -63,7 +65,6 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -185,6 +186,8 @@ require('lazy').setup {
     config = function()
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      --
+
       require('telescope').setup {
         extensions = {
           ['ui-select'] = {
@@ -299,10 +302,8 @@ require('lazy').setup {
       end
 
       local servers = {
-        clangd = {},
         gopls = {},
         pyright = {},
-        rust_analyzer = {},
         ansiblels = {},
         dockerls = {},
         tailwindcss = {},
@@ -315,6 +316,10 @@ require('lazy').setup {
               description = 'Organize Imports',
             },
           },
+          inlay_hints = { enabled = true },
+          on_attach = function(client, bufnr)
+            require('workspace-diagnostics').populate_workspace_diagnostics(client, bufnr)
+          end,
         },
 
         docker_compose_language_service = {},
@@ -352,8 +357,10 @@ require('lazy').setup {
         'stylua', -- Used to format lua code
         'dockerfile-language-server',
         'typescript-language-server',
-        'csharp-language-server',
+        'jdtls',
+        'astro-language-server',
         'prettierd',
+        'pyright',
         'css-lsp',
         'eslint_d',
         'bash-language-server',
@@ -387,9 +394,10 @@ require('lazy').setup {
         python = { 'isort', 'black' },
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        java = { { 'jdtls' } },
         html = { { 'prettierd', 'prettier' } },
         typescriptreact = { { 'prettierd', 'prettier' } },
-        astro = { { 'astro' } },
+        astro = { { 'astro', 'astro-language-server' } },
         docker = { { 'dockerfile-language-server' } },
         dockerfile = { { 'dockerfile-language-server' } },
         yaml = { { 'prettierd', 'prettier' } },
@@ -398,7 +406,7 @@ require('lazy').setup {
         scss = { { 'prettierd', 'prettier' } },
         toml = { { 'prettierd', 'prettier', 'taplo' } },
         csharp = { { 'csharpier' } },
-        -- tailwindcss = { { 'tailwindcss' } },
+        go = { { 'gofumpt' } },
       },
     },
   },
@@ -474,7 +482,6 @@ require('lazy').setup {
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-      require('mini.jump2d').setup()
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -482,14 +489,6 @@ require('lazy').setup {
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-
-      local statusline = require 'mini.statusline'
-      statusline.setup()
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
     end,
   },
 
@@ -512,3 +511,19 @@ vim.api.nvim_create_autocmd('User', {
     end)
   end,
 })
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*',
+  callback = function(args)
+    require('conform').format { bufnr = args.buf }
+  end,
+})
+
+vim.api.nvim_set_keymap('n', '<leader>twr', "<cmd>lua require('neotest').run.run({ vitestCommand = 'vitest --watch' })<cr>", { desc = 'Run Watch' })
+
+vim.api.nvim_set_keymap(
+  'n',
+  '<leader>twf',
+  "<cmd>lua require('neotest').run.run({ vim.fn.expand('%'), vitestCommand = 'vitest --watch' })<cr>",
+  { desc = 'Run Watch File' }
+)

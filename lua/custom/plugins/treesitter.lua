@@ -7,13 +7,10 @@ return {
   config = function()
     require('nvim-treesitter.configs').setup {
       build = ':TSUpdate',
-      ensure_installed = { 'vimdoc', 'javascript', 'typescript', 'c', 'lua', 'rust', 'bash', 'markdown', 'html', 'dockerfile' },
+      ensure_installed = { 'vimdoc', 'javascript', 'typescript', 'c', 'lua', 'rust', 'bash', 'markdown', 'html', 'dockerfile', 'java' },
 
       indent = { enable = true },
       sync_install = false,
-      autotag = {
-        enable = true,
-      },
       auto_install = true,
 
       highlight = {
