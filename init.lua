@@ -1,6 +1,8 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.g.netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
+
 vim.g.have_nerd_font = true
 
 vim.opt.number = true
@@ -55,7 +57,6 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -204,6 +205,8 @@ require('lazy').setup({
     config = function()
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
+      --
+
       require('telescope').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
@@ -345,9 +348,29 @@ require('lazy').setup({
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
-        clangd = {},
         gopls = {},
-        tsserver = {},
+        pyright = {},
+        ansiblels = {},
+        dockerls = {},
+        tailwindcss = {},
+        prettierd = {},
+        bashls = {},
+        tsserver = {
+          commands = {
+            OrganizeImports = {
+              organize_imports,
+              description = 'Organize Imports',
+            },
+          },
+          inlay_hints = { enabled = true },
+          on_attach = function(client, bufnr)
+            require('workspace-diagnostics').populate_workspace_diagnostics(client, bufnr)
+          end,
+        },
+
+        docker_compose_language_service = {},
+        eslint_d = {},
+        cssls = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -365,11 +388,18 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
+        'stylua', -- Used to format lua code
+        'dockerfile-language-server',
+        'typescript-language-server',
+        'jdtls',
+        'astro-language-server',
+        'prettierd',
+        'pyright',
+        'css-lsp',
         'stylua',
         'eslint',
         'eslint_d',
         'prettier',
-        'prettierd',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -415,6 +445,19 @@ require('lazy').setup({
         python = { 'isort', 'black' },
         javascript = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
+        java = { { 'jdtls' } },
+        html = { { 'prettierd', 'prettier' } },
+        typescriptreact = { { 'prettierd', 'prettier' } },
+        astro = { { 'astro', 'astro-language-server' } },
+        docker = { { 'dockerfile-language-server' } },
+        dockerfile = { { 'dockerfile-language-server' } },
+        yaml = { { 'prettierd', 'prettier' } },
+        json = { { 'prettierd', 'prettier' } },
+        css = { { 'prettierd', 'prettier' } },
+        scss = { { 'prettierd', 'prettier' } },
+        toml = { { 'prettierd', 'prettier', 'taplo' } },
+        csharp = { { 'csharpier' } },
+        go = { { 'gofumpt' } },
         json = { { 'prettierd', 'prettier' } },
       },
     },
@@ -668,3 +711,30 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'GitConflictDetected',
+  callback = function()
+    vim.notify('Conflict detected in ' .. vim.fn.expand '<afile>')
+    vim.keymap.set('n', 'cww', function()
+      engage.conflict_buster()
+      create_buffer_local_mappings()
+    end)
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*',
+  callback = function(args)
+    require('conform').format { bufnr = args.buf }
+  end,
+})
+
+vim.api.nvim_set_keymap('n', '<leader>twr', "<cmd>lua require('neotest').run.run({ vitestCommand = 'vitest --watch' })<cr>", { desc = 'Run Watch' })
+
+vim.api.nvim_set_keymap(
+  'n',
+  '<leader>twf',
+  "<cmd>lua require('neotest').run.run({ vim.fn.expand('%'), vitestCommand = 'vitest --watch' })<cr>",
+  { desc = 'Run Watch File' }
+)

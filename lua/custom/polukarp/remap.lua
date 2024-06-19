@@ -1,6 +1,11 @@
 vim.g.mapleader = ' '
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 
+vim.keymap.set('n', '<Up>', '<nop>')
+vim.keymap.set('n', '<Down>', '<nop>')
+vim.keymap.set('n', '<Left>', '<nop>')
+vim.keymap.set('n', '<Right>', '<nop>')
+
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
@@ -34,6 +39,21 @@ vim.keymap.set('n', '<leader>x', '<cmd>!chmod +x %<CR>', { silent = true })
 vim.keymap.set('n', '<leader>vpp', '<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>')
 vim.keymap.set('n', '<leader>mr', '<cmd>CellularAutomaton make_it_rain<CR>')
 
+vim.api.nvim_create_user_command('OrganizeImports', function()
+  vim.cmd ':OrganizeImports'
+end, {})
+
+vim.api.nvim_set_keymap('n', '<leader>o', ':OrganizeImports<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<leader>q', ':q<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<leader>Q', ':q!<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('n', '<C-s>', ':w<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader><leader>', function()
   vim.cmd 'so'
 end)
